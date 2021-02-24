@@ -69,24 +69,4 @@ public class EmbeddedKafkaIntegrationTest {
         System.out.println("### Consumer Topic: " + consumerRecord.topic());
         System.out.println("### Consumer key: " + consumerRecord.key());
     }
-
-    @Test
-    public void test_send() throws Exception {
-
-        Model model = new Model();
-        model.setFirstNumber(1);
-        model.setSecondNumber(2);
-        model.setAdditionalProperty("test", "value");
-        ProducerRecord<String, Model> record = new ProducerRecord<>(topic, model);
-        // set reply topic in header
-        record.headers().add(new RecordHeader(KafkaHeaders.REPLY_TOPIC, requestReplyTopic.getBytes()));
-        // post in kafka topic
-        ListenableFuture<SendResult<String, Model>> send = kafkaTemplate.send(topic, model);
-
-        SendResult<String, Model> stringModelSendResult = send.get();
-        System.out.println(stringModelSendResult.getRecordMetadata());
-        System.out.println(stringModelSendResult.getProducerRecord().headers());
-        System.out.println(stringModelSendResult.getProducerRecord().topic());
-        // confirm if producer produced successfully
-    }
 }
